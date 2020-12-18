@@ -3,7 +3,7 @@ import java.net.*;
 import java.rmi.UnknownHostException;
 import java.util.Scanner;
 
-public class Klient {
+public class Client {
     int PORT = 51715;
     Socket socket;
     private DataInputStream input;
@@ -24,7 +24,7 @@ public class Klient {
     }
 
     public void sendIntToServer(int num) throws IOException {
-        output.writeInt(num);;
+        output.writeInt(num);
     }
 
     public int getServerResponse() {
@@ -35,7 +35,15 @@ public class Klient {
         }
     }
 
-    private boolean isConnected() {
-        return isConnected;
+    private int pingServer() throws IOException {
+        output.writeInt(1111);
+        return input.readInt();
+    }
+
+    public boolean isConnected() throws IOException {
+        if (this.isConnected && pingServer() != 9999) {
+            this.isConnected = false;
+        }
+        return this.isConnected;
     }
 }
