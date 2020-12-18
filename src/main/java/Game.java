@@ -7,16 +7,15 @@ public class Game {
     public Game() {}
 
     public void begin() throws IOException {
-        System.out.println("Tak będzie działać gra");
+        /*
+            Tu będzie logika matchmakingu
+         */
 
-        // logika matchmakingu
-
-        //tymczasowe
+        //tymczasowe do sprawdzenia działania komunikacji z serwerem
         Scanner sc = new Scanner(System.in);
 
-        Klient client = new Klient();
+        Client client = new Client();
         client.connect();
-        // ładowanie mapy
         isMatchInProcess = true;
         int num;
 
@@ -24,12 +23,6 @@ public class Game {
             num = sc.nextInt();
             client.sendIntToServer(num);
             System.out.println(client.getServerResponse());
-
-            //System.out.println("Teraz tura");
-            // oboje gracze mają własne wątki, które sprawdzają czy jest ich tura
-
-            // najlepiej, żeby aktywny gracz robił ruch, następnie serwer dostaje info,
-            // że ten gracz zakończył ruch, po czym wysyła informację do kolejnego gracza
         }
 
     }

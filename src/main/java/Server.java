@@ -3,26 +3,24 @@ import java.net.*;
 import java.util.Scanner;
 
 public class Server {
-
-    DataInputStream input;
-    DataOutputStream output;
+    private ServerSocket serverSocket;
 
     public Server() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(51715);
-
-        System.out.println("Waiting for client...");
-        Socket socket = serverSocket.accept();
-        System.out.println("Client connected");
-
-        input = new DataInputStream(socket.getInputStream());
-        output = new DataOutputStream(socket.getOutputStream());
+        serverSocket = new ServerSocket(51715);
     }
 
     public void run() throws IOException {
-
-        while (true) {
-            int num = input.readInt();
-            output.writeInt(num*2);
+        while (true)
+        {
+            Socket socket;
+            // socket object to receive incoming client requests
+            socket = serverSocket.accept();
+            System.out.println("A new client is connected : " + socket +
+                    "\nAssigning new thread for this client");
+            // create a new thread object
+            Thread t = new ClientHandler(socket);
+            // Invoking the start() method
+            t.start();
         }
     }
 
@@ -31,20 +29,4 @@ public class Server {
         Server server = new Server();
         server.run();
     }
-    /*public static void main(String[] args) throws IOException {
-        final int PORT = 51715;
-        int number;
-        ServerSocket serverSocket = new ServerSocket(PORT);
-        Socket socket = serverSocket.accept();
-
-        // przychwytywanie informacji od gracza
-        Scanner scanner = new Scanner(socket.getInputStream());
-
-        PrintStream p = new PrintStream(socket.getOutputStream());
-        while (true) {
-            number = scanner.nextInt();
-            number *= 2;
-            p.println(number);
-        }
-    }*/
 }
