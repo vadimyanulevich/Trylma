@@ -3,6 +3,7 @@ import java.net.*;
 import java.util.Scanner;
 
 public class Server {
+    private Socket socket;
     private ServerSocket serverSocket;
 
     public Server() throws IOException {
@@ -12,16 +13,16 @@ public class Server {
     public void run() throws IOException {
         while (true)
         {
-            Socket socket;
-            // socket object to receive incoming client requests
-            socket = serverSocket.accept();
-            System.out.println("A new client is connected : " + socket +
-                    "\nAssigning new thread for this client");
-            // create a new thread object
-            Thread t = new ClientHandler(socket);
-            // Invoking the start() method
-            t.start();
+            this.handleClient();
         }
+    }
+
+    public void handleClient() throws IOException {
+        // socket object to receive incoming client requests
+        socket = serverSocket.accept();
+        System.out.println("A new client is connected : " + socket);
+        // create a new thread object
+        new ClientHandler(socket).start();
     }
 
     public static void main(String[] args) throws IOException {
