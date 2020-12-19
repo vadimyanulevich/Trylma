@@ -1,14 +1,18 @@
 import java.io.*;
 import java.net.*;
-import java.rmi.UnknownHostException;
 import java.util.Scanner;
 
 public class Client {
     int PORT = 51715;
+    int TIMEOUT = 3000;
     Socket socket;
     private DataInputStream input;
     private DataOutputStream output;
     private boolean isConnected;
+
+    public Client() {
+        this.connect();
+    }
 
     public void connect() {
         try {
@@ -36,13 +40,23 @@ public class Client {
     }
 
     private int pingServer() throws IOException {
-        output.writeInt(1111);
-        return input.readInt();
+        sendIntToServer(1111);
+        return getServerResponse();
     }
 
-    public boolean isConnected() throws IOException {
-        if (this.isConnected && pingServer() != 9999) {
-            this.isConnected = false;
+    public boolean isConnected() {
+        this.isConnected = false;
+        SocketAddress socketAddress;
+        try {
+            socketAddress = new InetSocketAddress(InetAddress.getLocalHost(), PORT);
+            Socket newSocket = new Socket();
+            newSocket.connect(socketAddress, TIMEOUT);
+            newSocket.close();
+            this.isConnected = true;
+        } catch (SocketTimeoutException socketTimeoutException) {
+            System.out.println("SocketTimeoutException");
+        } catch (IOException e) {
+            System.out.println("Unable to connect to the socket");
         }
         return this.isConnected;
     }

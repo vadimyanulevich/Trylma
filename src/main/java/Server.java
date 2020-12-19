@@ -25,6 +25,10 @@ public class Server {
         new ClientHandler(socket).start();
     }
 
+    public ServerSocket getServerSocket() {
+        return this.serverSocket;
+    }
+
     public static void main(String[] args) throws IOException {
 
         Server server = new Server();
