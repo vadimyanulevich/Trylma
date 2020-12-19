@@ -27,21 +27,22 @@ public class Client {
         }
     }
 
-    public void sendIntToServer(int num) throws IOException {
-        output.writeInt(num);
+    public boolean sendIntToServer(int num) {
+        try {
+            output.writeInt(num);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public int getServerResponse() {
         try {
             return input.readInt();
         } catch (IOException e) {
+            System.out.println("Client is unable to reach server");
             return -1;
         }
-    }
-
-    private int pingServer() throws IOException {
-        sendIntToServer(1111);
-        return getServerResponse();
     }
 
     public boolean isConnected() {
